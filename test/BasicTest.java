@@ -5,9 +5,109 @@ import models.*;
 
 public class BasicTest extends UnitTest {
 
-    @Test
-    public void aVeryImportantThingToTest() {
-        assertEquals(2, 1 + 1);
+    @Before
+    public void setup() {
+        Fixtures.deleteAll();
     }
 
+    @Test
+    public void createAndRetrieveUser() {
+        new User("golettoo@gmail.com", "123456", "Jeffrey Hu").save();
+        User jeffrey = User.find("byEmail", "golettoo@gmail.com").first();
+
+        assertNotNull(jeffrey);
+        assertEquals("Jeffrey Hu", jeffrey.fullname);
+    }
+
+    @Test
+    public void tryConnectAsUser() {
+        new User("golettoo@gmail.com", "123456", "Jeffrey Hu").save();
+        
+        assertNotNull(User.connect("golettoo@gmail.com", "123456"));
+        assertNull(User.connect("golettoo@gmail.com", "1231325123456"));
+        assertNull(User.connect("goleo@gmail.com", "123456"));
+    }
+
+    @Test
+    public void createPost() {
+        User jeffrey = new User("golettoo@gmail.com", "123456", "Jeffrey Hu").save();
+        new Post(jeffrey, "My first post", "Hello world").save();
+        assertEquals(1, Post.count());
+
+        List<Post> posts = Post.find("byAuthor", jeffrey).fetch();
+
+        // Tests
+        assertEquals(1, posts.size());
+        Post firstPost = posts.get(0);
+        assertNotNull(firstPost);
+        assertEquals(jeffrey, firstPost.author);
+        assertEquals("My first post", firstPost.title);
+        assertEquals("Hello world", firstPost.content);
+        assertNotNull(firstPost.postedAt);
+    }
+
+    @Test
+    public void postComments() {
+        // Create a new user and save it 
+        User jeffrey = new User("golettoo@gmail.com", "123456", "Jeffrey Hu").save();
+
+        // Create a new post
+        Post post = new Post(jeffrey, "My first post", "Hello world").save();
+
+        // Post 2 comments
+        new Comment(post, "jeff", "Nice post").save();
+        new Comment(post, "Tom", "haha").save();
+
+        // Retrieve all comments
+        List<Comment> comments = Comment.find("byPost", post).fetch();
+
+        // Tests
+        assertEquals(2, comments.size());
+
+        Comment firstComment = comments.get(0);
+        assertNotNull(firstComment);
+        assertEquals("jeff", firstComment.author);
+        assertEquals("Nice post", firstComment.content);
+        assertNotNull(firstComment.postedAt);
+
+        Comment secondComment = comments.get(1);
+        assertNotNull(secondComment);
+        assertEquals("Tom", secondComment.author);
+        assertEquals("haha", secondComment.content);
+        assertNotNull(secondComment.postedAt);
+    }
+
+    @Test
+    public void useTheCommentsRelation() {
+        // Create a new user and save it
+        User jeffrey = new User("golettoo@gmail.com", "123456", "Jeffrey Hu").save();
+
+        // Create a new post
+        Post post = new Post(jeffrey, "My first post", "Hello world").save();
+
+        // Post 2 comments
+        post.addComment("jeff", "Nice post").save();
+        post.addComment("Tom", "haha").save();
+
+        // Count things
+        assertEquals(1, User.count());
+        assertEquals(1, Post.count());
+        assertEquals(2, Comment.count());
+
+        // Retrieve Jeffrey post
+        post = Post.find("byAuthor", jeffrey).first();
+        System.out.println(post.comments);
+        assertNotNull(post);
+
+        // Navigate to comments
+        assertEquals(2, post.comments.size());
+        assertEquals("Tom", post.comments.get(1).author);
+
+        // Delete the post
+        post.delete();
+
+        assertEquals(1, User.count());
+        assertEquals(0, Post.count());
+        assertEquals(0, Comment.count());
+    }
 }
