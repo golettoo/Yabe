@@ -7,6 +7,8 @@
             href="@{'/public/stylesheets/main.css'}" />
         <link rel="shortcut icon" type="image/png" 
             href="@{'/public/images/favicon.png'}" />
+        <script src="@{'/public/javascripts/jquery-1.4.2.min.js'}"></script>
+        <script src="@{'/public/javascripts/jquery.tools-1.2.5.toolbox.expose.min.js'}"></script>
     </head>
     <body>
         
@@ -21,13 +23,13 @@
             </ul>
             <div id="title">
                 <span class="about">About this blog</span>
-                <h1><a href="#">${blogTitle}</a></h1>
+                <h1><a href="@{Application.index()}">${blogTitle}</a></h1>
                 <h2>${blogBaseline}</h2>
             </div>
         </div>
         
         <div id="main">
-            #{doLayout /} 
+        #{doLayout /}
         </div>
         
         <p id="footer">

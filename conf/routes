@@ -5,6 +5,10 @@
 # Home page
 GET     /                                       Application.index
 
+GET     /post/{id}                              Application.show
+
+POST    /post/{postId}/comments                Application.postComment
+
 # Ignore favicon requests
 GET     /favicon.ico                            404
 
