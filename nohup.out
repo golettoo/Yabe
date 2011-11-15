@@ -1,6 +1,0 @@
-Listening for transport dt_socket at address: 8000
-07:47:11,324 INFO  ~ Starting /home/yabe
-07:47:11,848 WARN  ~ You're running Play! in DEV mode
-07:47:11,915 INFO  ~ Listening for HTTP on port 9000 (Waiting a first request to start) ...
-07:47:20,594 INFO  ~ Application 'Yet Another Blog Engine' is now started !
-07:50:04,468 INFO  ~ Connected to jdbc:h2:mem:play;MODE=MYSQL
