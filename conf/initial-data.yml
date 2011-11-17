@@ -65,4 +65,17 @@ Comment(c3):
                     This post is useless ?
     postedAt:       2009-04-05
     post:           secondBobPost    
+    
+
+Tag(play):
+    name:           Play
+ 
+Tag(architecture):
+    name:           Architecture
+ 
+Tag(test):
+    name:           Test
+ 
+Tag(mvc):
+    name:           MVC 
                  
